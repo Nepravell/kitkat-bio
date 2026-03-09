@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sonya Kitkat</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root {
+    --bg: #130b0e;
+    --surface: #1f1418;
+    --surface-variant: #2d1d23;
+    --primary: #f285a7;
+    --on-primary: #4d162a;
+    --text-main: #f0e0e3;
+    --text-sub: #d3bdc2;
+    --outline: #3d2d33;
+    --nav-bg: rgba(31, 20, 24, 0.8);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+body {
+    margin: 0; padding: 0;
+    font-family: 'Google Sans Flex', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.screen {
+    display: none;
+    padding: 20px;
+    padding-bottom: 120px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    animation: screenIn 0.5s cubic-bezier(0.2, 0, 0, 1);
+}
+.screen.active { display: block; }
+
+@keyframes screenIn {
+    from { opacity: 0; transform: translateY(15px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    max-width: 480px;
+    margin: 0 auto;
+}
+.made-by {
+    font-size: 12px;
+    color: var(--text-sub);
+    text-decoration: none;
+    background: var(--surface);
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--outline);
+    transition: 0.3s;
+}
+.made-by span { color: var(--primary); font-weight: 700; transition: color 0.4s; }
+
+.header-main { text-align: center; margin-top: 10px; margin-bottom: 30px; }
+.logo-img {
+    width: 100px; height: 100px;
+    border-radius: 35px;
+    object-fit: cover;
+    border: 2px solid var(--outline);
+    margin-bottom: 15px;
+    transition: border-color 0.4s;
+}
+.header-main h1 { font-size: 28px; margin: 0; font-weight: 700; }
+.tagline { color: var(--primary); font-size: 15px; margin-top: 4px; font-weight: 500; transition: color 0.4s; }
+
+.label { font-size: 13px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 10px 10px; font-weight: 700; }
+
+.card-stack { background: var(--surface); border-radius: 28px; overflow: hidden; border: 1px solid var(--outline); margin-bottom: 20px; transition: 0.4s; }
+.card {
+    display: flex; align-items: center; padding: 18px;
+    text-decoration: none; color: var(--text-main);
+    border-bottom: 1px solid var(--outline);
+    transition: background 0.2s, border-color 0.4s;
+    cursor: pointer;
+}
+.card:last-child { border: none; }
+.card:active { background: var(--surface-variant); }
+.icon-box {
+    width: 42px; height: 42px; background: var(--surface-variant);
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    margin-right: 15px; color: var(--primary);
+    transition: 0.4s;
+}
+
+@keyframes iconPop {
+    0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+    60% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.screen.active .icon-box i {
+    animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.nav-bar {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    min-width: 220px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--outline);
+    border-radius: 35px;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 20px;
+    z-index: 1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: 0.4s;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-sub);
+    text-decoration: none;
+    width: 70px;
+    transition: 0.3s;
+}
+.nav-item i { transition: 0.3s; margin-bottom: 4px; }
+.nav-item span { font-size: 11px; font-weight: 600; transition: 0.3s; }
+.nav-item.active { color: var(--primary); }
+
+@keyframes navPop {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-6px) scale(1.2); }
+    100% { transform: translateY(-4px) scale(1); }
+}
+.nav-item.active i { animation: navPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+
+.modal-content {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: 32px;
+    width: 90%; max-width: 340px;
+    padding: 24px;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1), background 0.4s, border-color 0.4s;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+.modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--text-main); }
+.close-btn { background: var(--surface-variant); border: none; color: var(--text-main); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+.close-btn:active { transform: scale(0.9); }
+
+.theme-option {
+    display: flex; align-items: center; padding: 14px 16px;
+    border-radius: 20px; cursor: pointer; transition: background 0.2s;
+    margin-bottom: 8px; border: 1px solid transparent;
+}
+.theme-option:hover { background: var(--surface-variant); }
+.theme-option.active { border-color: var(--primary); background: var(--surface-variant); }
+.color-circle { width: 24px; height: 24px; border-radius: 50%; margin-right: 15px; border: 2px solid rgba(255,255,255,0.2); }
+.theme-name { font-weight: 600; font-size: 15px; color: var(--text-main); }
+
+.creator-widget {
+    margin-top: 40px;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: 32px;
+    border: 1px solid var(--outline);
+    display: flex;
+    align-items: center;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+@keyframes md3Pulse {
+    0% { box-shadow: 0 0 0 0 var(--primary); }
+    70% { box-shadow: 0 0 0 15px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.pulse-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px; 
+    background: var(--surface-variant);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px;
+    position: relative;
+    border: 2px solid var(--primary);
+    animation: md3Pulse 2s infinite cubic-bezier(0.2, 0, 0, 1);
+    transition: border-color 0.4s;
+    flex-shrink: 0;
+}
+.pulse-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    object-fit: cover;
+}
+.pulse-avatar i { color: var(--primary); position: absolute; transition: 0.4s; }
+
+.creator-text { display: flex; flex-direction: column; justify-content: center; }
+.c-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 2px; transition: color 0.3s; }
+.c-title span { color: var(--primary); transition: 0.4s; }
+.c-subtitle { font-size: 13px; font-weight: 500; color: var(--text-sub); }
+
+.creator-widget:active { transform: scale(0.97); }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div style="width: 24px;"></div>
+    <a href="https://t.me/bionepravel" class="made-by">made by <span>nepravel</span></a>
+</div>
+
+<div id="home" class="screen active">
+    <div class="header-main">
+        <img src="logo.jpg" alt="SK" class="logo-img" onerror="this.src='https://via.placeholder.com/100/1f1418/f285a7?text=SK'">
+        <h1>Sonya Kitkat</h1>
+        <div class="tagline">UI & Graph designer</div>
+    </div>
+    
+    <div class="label">Projects</div>
+    <div class="card-stack">
+        <a href="https://t.me/everrnyans" class="card">
+            <div class="icon-box"><i data-lucide="sparkles"></i></div>
+            <div class="card-info"><b>Everrnyan</b><br><small>Portfolio & Concepts</small></div>
+        </a>
+        <a href="https://t.me/MeowaLand" class="card">
+            <div class="icon-box"><i data-lucide="map"></i></div>
+            <div class="card-info"><b>MeowaLand</b><br><small>Creative World</small></div>
+        </a>
+    </div>
+
+    <div class="label">Social</div>
+    <div class="card-stack">
+        <a href="http://tiktok.com/@everrnyan" class="card">
+            <div class="icon-box"><i data-lucide="video"></i></div>
+            <div class="card-info"><b>TikTok</b><br><small>Short designs</small></div>
+        </a>
+        <a href="https://t.me/+6VQ7Cy-xcVUyZGYx" class="card">
+            <div class="icon-box"><i data-lucide="users"></i></div>
+            <div class="card-info"><b>Community</b><br><small>Join the chat</small></div>
+        </a>
+    </div>
+</div>
+
+<div id="settings" class="screen">
+    <h2 style="text-align:center; margin-bottom: 30px;">Settings</h2>
+    
+    <div class="label">Appearance</div>
+    <div class="card-stack">
+        <div class="card" onclick="openThemeModal()">
+            <div class="icon-box"><i data-lucide="palette"></i></div>
+            <div class="card-info"><b>Theme</b><br><small id="current-theme-name">Material You (Pink)</small></div>
+        </div>
+    </div>
+
+    <a href="https://t.me/bionepravel" class="creator-widget">
+        <div class="pulse-avatar">
+            <i data-lucide="user"></i>
+            <img src="icon.jpg" alt="" onerror="this.style.display='none'">
+        </div>
+        <div class="creator-text">
+            <div class="c-title">created by <span>nepravel</span></div>
+            <div class="c-subtitle">Good Luck! ✨</div>
+        </div>
+    </a>
+</div>
+
+<nav class="nav-bar">
+    <a href="javascript:void(0)" class="nav-item active" onclick="switchTab('home', this)">
+        <i data-lucide="home"></i>
+        <span>Home</span>
+    </a>
+    <a href="javascript:void(0)" class="nav-item" onclick="switchTab('settings', this)">
+        <i data-lucide="settings"></i>
+        <span>Settings</span>
+    </a>
+</nav>
+
+<div class="modal-overlay" id="theme-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Select Theme</h3>
+            <button class="close-btn" onclick="closeThemeModal()"><i data-lucide="x" size="20"></i></button>
+        </div>
+        
+        <div class="theme-option active" onclick="setTheme('pink', this)">
+            <div class="color-circle" style="background: #f285a7;"></div>
+            <div class="theme-name">Pink (Default)</div>
+        </div>
+        <div class="theme-option" onclick="setTheme('purple', this)">
+            <div class="color-circle" style="background: #d0bcff;"></div>
+            <div class="theme-name">Lavender Purple</div>
+        </div>
+        <div class="theme-option" onclick="setTheme('blue', this)">
+            <div class="color-circle" style="background: #a8c7fa;"></div>
+            <div class="theme-name">Ocean Blue</div>
+        </div>
+        <div class="theme-option" onclick="setTheme('green', this)">
+            <div class="color-circle" style="background: #9cd67d;"></div>
+            <div class="theme-name">Mint Green</div>
+        </div>
+    </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+function switchTab(screenId, el) {
+    if(el.classList.contains('active')) return; 
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        void s.offsetWidth; 
+    });
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    
+    document.getElementById(screenId).classList.add('active');
+    el.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const themeModal = document.getElementById('theme-modal');
+
+function openThemeModal() {
+    themeModal.classList.add('active');
+}
+
+function closeThemeModal() {
+    themeModal.classList.remove('active');
+}
+
+themeModal.addEventListener('click', (e) => {
+    if (e.target === themeModal) closeThemeModal();
+});
+
+const palettes = {
+    pink: {
+        bg: '#130b0e', surface: '#1f1418', variant: '#2d1d23',
+        primary: '#f285a7', textMain: '#f0e0e3', textSub: '#d3bdc2',
+        outline: '#3d2d33', navBg: 'rgba(31, 20, 24, 0.8)', name: 'Pink'
+    },
+    purple: {
+        bg: '#141218', surface: '#211f26', variant: '#332d41',
+        primary: '#d0bcff', textMain: '#e6e0e9', textSub: '#cac4d0',
+        outline: '#49454f', navBg: 'rgba(33, 31, 38, 0.8)', name: 'Lavender Purple'
+    },
+    blue: {
+        bg: '#08131c', surface: '#111f2a', variant: '#1e2e3b',
+        primary: '#a8c7fa', textMain: '#e2e2e2', textSub: '#c4c7c5',
+        outline: '#444746', navBg: 'rgba(17, 31, 42, 0.8)', name: 'Ocean Blue'
+    },
+    green: {
+        bg: '#0f140f', surface: '#1a211a', variant: '#2d362d',
+        primary: '#9cd67d', textMain: '#e1e3de', textSub: '#c4c7c3',
+        outline: '#444843', navBg: 'rgba(26, 33, 26, 0.8)', name: 'Mint Green'
+    }
+};
+
+function setTheme(themeKey, el) {
+    const theme = palettes[themeKey];
+    const root = document.documentElement;
+
+    root.style.setProperty('--bg', theme.bg);
+    root.style.setProperty('--surface', theme.surface);
+    root.style.setProperty('--surface-variant', theme.variant);
+    root.style.setProperty('--primary', theme.primary);
+    root.style.setProperty('--text-main', theme.textMain);
+    root.style.setProperty('--text-sub', theme.textSub);
+    root.style.setProperty('--outline', theme.outline);
+    root.style.setProperty('--nav-bg', theme.navBg);
+    document.getElementById('current-theme-name').innerText = `Material You (${theme.name})`;
+    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+    el.classList.add('active');
+    setTimeout(closeThemeModal, 200);
+}
+</script>
+</body>
+</html>
